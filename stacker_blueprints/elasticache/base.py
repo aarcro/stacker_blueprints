@@ -218,6 +218,8 @@ class BaseReplicationGroup(Blueprint):
             NOVALUE
         port = variables["Port"] or NOVALUE
         snapshot_arns = variables["SnapshotArns"] or NOVALUE
+        snapshot_retention_limit = variables["SnapshotRetentionLimit"] or \
+            NOVALUE
         snapshot_window = variables["SnapshotWindow"] or NOVALUE
         maintenance_window = variables["PreferredMaintenanceWindow"] or \
             NOVALUE

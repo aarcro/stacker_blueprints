@@ -1,5 +1,10 @@
 {
     "Outputs": {
+        "AliasArn": {
+            "Value": {
+                "Ref": "Alias"
+            }
+        },
         "FunctionArn": {
             "Value": {
                 "Fn::GetAtt": [
@@ -46,6 +51,16 @@
         }
     },
     "Resources": {
+        "Alias": {
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "Function"
+                },
+                "FunctionVersion": "$LATEST",
+                "Name": "prod"
+            },
+            "Type": "AWS::Lambda::Alias"
+        },
         "Function": {
             "Properties": {
                 "Code": {
@@ -157,7 +172,7 @@
                         }
                     ]
                 },
-                "PolicyName": "test-test_aws_lambda_Function-policy",
+                "PolicyName": "test-test_aws_lambda_Function_with_alias_partial_name-policy",
                 "Roles": [
                     {
                         "Ref": "Role"

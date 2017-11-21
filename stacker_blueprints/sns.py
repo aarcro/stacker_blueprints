@@ -113,7 +113,7 @@ class Topics(Blueprint):
         """
         Creates the SNS topic, along with any subscriptions requested.
         """
-        topic_subs = None
+        topic_subs = []
         t = self.template
 
         if "Subscription" in topic_config:
@@ -133,5 +133,6 @@ class Topics(Blueprint):
         )
         t.add_output(Output(topic_name + "Arn", Value=topic_arn))
 
-        if topic_subs:
-            self.create_sqs_policy(topic_name, topic_arn, topic_subs)
+        sqs_subs = [sub for sub in topic_subs if sub["Protocol"] == "sqs"]
+        if sqs_subs:
+            self.create_sqs_policy(topic_name, topic_arn, sqs_subs)

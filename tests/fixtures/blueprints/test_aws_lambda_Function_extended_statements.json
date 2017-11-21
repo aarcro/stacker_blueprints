@@ -154,10 +154,19 @@
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "Action": [
+                                "ec2:DescribeInstances"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": [
+                                "*"
+                            ]
                         }
                     ]
                 },
-                "PolicyName": "test-test_aws_lambda_Function-policy",
+                "PolicyName": "test-test_aws_lambda_Function_extended_statements-policy",
                 "Roles": [
                     {
                         "Ref": "Role"

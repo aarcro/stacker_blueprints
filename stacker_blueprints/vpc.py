@@ -247,22 +247,18 @@ class VPC(Blueprint):
                 else:
                     # Private subnets are where actual instances will live
                     # so their gateway needs to be through the nat instances
-                    if variables["UseNatGateway"]:
-                        instance_id = NOVALUE
-                        nat_gateway_id = Ref(NAT_GATEWAY_NAME % name_suffix)
-                    else:
-                        instance_id = Ref(NAT_INSTANCE_NAME % name_suffix)
-                        nat_gateway_id = NOVALUE
-
-                    t.add_resource(
-                        ec2.Route(
-                            route_name,
-                            RouteTableId=Ref(route_table_name),
-                            DestinationCidrBlock='0.0.0.0/0',
-                            InstanceId=instance_id,
-                            NatGatewayId=nat_gateway_id,
-                        )
+                    route = ec2.Route(
+                        route_name,
+                        RouteTableId=Ref(route_table_name),
+                        DestinationCidrBlock='0.0.0.0/0',
                     )
+                    if variables["UseNatGateway"]:
+                        route.NatGatewayId = Ref(
+                                NAT_GATEWAY_NAME % name_suffix)
+                    else:
+                        route.InstanceId = Ref(
+                                NAT_INSTANCE_NAME % name_suffix)
+                    t.add_resource(route)
 
         for net_type in net_types:
             t.add_output(

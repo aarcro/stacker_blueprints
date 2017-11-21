@@ -4,13 +4,15 @@ from setuptools import setup, find_packages
 src_dir = os.path.dirname(__file__)
 
 install_requires = [
-    "stacker~=1.0.1",
-    "troposphere~=1.9.3",
+    "stacker>=1.0.1",
+    "troposphere>=1.9.5",
+    "awacs>=0.6.0",
 ]
 
 tests_require = [
-    "nose~=1.0",
+    "nose",
     "mock~=2.0.0",
+    "stacker>=1.1.1",
 ]
 
 
@@ -23,7 +25,7 @@ def read(filename):
 if __name__ == "__main__":
     setup(
         name="stacker_blueprints",
-        version="1.0.2",
+        version="1.0.5",
         author="Michael Barrett",
         author_email="loki77@gmail.com",
         license="New BSD license",

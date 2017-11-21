@@ -1,5 +1,10 @@
 {
     "Outputs": {
+        "EventSourceMappingId": {
+            "Value": {
+                "Ref": "EventSourceMapping"
+            }
+        },
         "FunctionArn": {
             "Value": {
                 "Fn::GetAtt": [
@@ -46,6 +51,19 @@
         }
     },
     "Resources": {
+        "EventSourceMapping": {
+            "Properties": {
+                "EventSourceArn": "arn:aws:dynamodb:us-east-1:12345:table/FakeTable/stream/FakeStream",
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "Function",
+                        "Arn"
+                    ]
+                },
+                "StartingPosition": "0"
+            },
+            "Type": "AWS::Lambda::EventSourceMapping"
+        },
         "Function": {
             "Properties": {
                 "Code": {
@@ -90,6 +108,26 @@
             "Properties": {
                 "PolicyDocument": {
                     "Statement": [
+                        {
+                            "Action": [
+                                "dynamodb:DescribeStream",
+                                "dynamodb:GetRecords",
+                                "dynamodb:GetShardIterator"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": [
+                                "arn:aws:dynamodb:us-east-1:12345:table/FakeTable/stream/FakeStream"
+                            ]
+                        },
+                        {
+                            "Action": [
+                                "dynamodb:ListStreams"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": [
+                                "arn:aws:dynamodb:us-east-1:12345:table/FakeTable/stream/*"
+                            ]
+                        },
                         {
                             "Action": [
                                 "logs:CreateLogGroup",
@@ -157,7 +195,7 @@
                         }
                     ]
                 },
-                "PolicyName": "test-test_aws_lambda_Function-policy",
+                "PolicyName": "test-test_aws_lambda_Function_event_source_mapping-policy",
                 "Roles": [
                     {
                         "Ref": "Role"

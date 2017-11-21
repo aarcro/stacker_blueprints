@@ -1,4 +1,6 @@
 stacker_blueprints
 ==================
 
-Blueprints for use with stacker - an attempt at a common library.
+An attempt at a common Blueprint library for use with `stacker <https://github.com/remind101/stacker>`_.
+
+If you're new to stacker you may use `stacker_cookiecutter <https://github.com/remind101/stacker_cookiecutter>`_ to setup your project.
