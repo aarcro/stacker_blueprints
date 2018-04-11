@@ -4,6 +4,10 @@ from setuptools import setup, find_packages
 src_dir = os.path.dirname(__file__)
 
 install_requires = [
+    # See thread here:
+    # https://remind.slack.com/archives/C03GHL501/p1520983157000263
+    # Hope to remove lock on python-dateutil someday
+    "python-dateutil==2.6.1",
     "stacker>=1.0.1",
     "troposphere>=1.9.5",
     "awacs>=0.6.0",
@@ -25,7 +29,7 @@ def read(filename):
 if __name__ == "__main__":
     setup(
         name="stacker_blueprints",
-        version="1.0.5",
+        version="1.0.7",
         author="Michael Barrett",
         author_email="loki77@gmail.com",
         license="New BSD license",

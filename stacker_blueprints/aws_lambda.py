@@ -10,6 +10,7 @@ from troposphere import (
     NoValue,
     Output,
     Ref,
+    Sub,
     iam,
 )
 
@@ -260,12 +261,11 @@ class Function(Blueprint):
 
     def create_policy(self):
         t = self.template
-        policy_prefix = self.context.get_fqn(self.name)
 
         self.policy = t.add_resource(
             iam.PolicyType(
                 "Policy",
-                PolicyName="%s-policy" % policy_prefix,
+                PolicyName=Sub("${AWS::StackName}-policy"),
                 PolicyDocument=Policy(
                     Statement=self.generate_policy_statements()
                 ),
@@ -280,26 +280,23 @@ class Function(Blueprint):
     def create_role(self):
         t = self.template
 
-        vpc_policy = NoValue
+        self.role = t.add_resource(
+            iam.Role(
+                "Role",
+                AssumeRolePolicyDocument=get_lambda_assumerole_policy()
+            )
+        )
+
         if self.get_variables()["VpcConfig"]:
             # allow this Lambda to modify ENIs to allow it to run in our VPC.
-            policy_prefix = self.context.get_fqn(self.name)
-            vpc_policy = [
+            self.role.Policies = [
                 iam.Policy(
-                    PolicyName="%s-vpc-policy" % policy_prefix,
+                    PolicyName=Sub("${AWS::StackName}-vpc-policy"),
                     PolicyDocument=Policy(
                         Statement=lambda_vpc_execution_statements()
                     ),
                 )
             ]
-
-        self.role = t.add_resource(
-            iam.Role(
-                "Role",
-                AssumeRolePolicyDocument=get_lambda_assumerole_policy(),
-                Policies=vpc_policy
-            )
-        )
 
         t.add_output(
             Output("RoleName", Value=Ref(self.role))
@@ -376,8 +373,8 @@ class Function(Blueprint):
         if mapping:
             if "FunctionName" in mapping:
                 logger.warn(
-                    "FunctionName defined in EventSourceMapping in "
-                    "%s. Overriding.", self.context.get_fqn(self.name)
+                    Sub("FunctionName defined in EventSourceMapping in "
+                        "${AWS::StackName}. Overriding.")
                 )
             mapping["FunctionName"] = self.function.GetAtt("Arn")
             resource = t.add_resource(

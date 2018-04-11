@@ -1,3 +1,15 @@
+## 1.0.7 (2018-02-11)
+
+- FlexibleAutoScalingGroup blueprint [GH-156]
+- Update s3 policies with Remind in-house copies [GH-158]
+- Setup correct BucketPolicy for public websites in s3 [GH-159]
+
+## 1.0.6 (2017-12-08)
+
+- Add s3:PutObjectVersionAcl action to s3 policies [GH-150]
+- Fix sns.py trying to create an sqs policy for non-sqs-type topics [GH-151]
+- Fix default for topics with no subscriptions [GH-153]
+
 ## 1.0.5 (2017-11-01)
 
 This is a minor release to deal with dependency conflicts between
