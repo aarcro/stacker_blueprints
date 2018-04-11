@@ -1,6 +1,6 @@
 from copy import copy
 
-from troposphere import efs, Tags
+from troposphere import efs, Output, Tags
 
 from stacker.blueprints.base import Blueprint
 from stacker.blueprints.variables.types import CFNString
@@ -56,7 +56,8 @@ class ElasticFileSystem(Blueprint):
 
         params['FileSystemTags'] = self.make_tags(params.pop('Tags'))
 
-        t.add_resource(efs.FileSystem(**params))
+        self.file_system = t.add_resource(efs.FileSystem(**params))
+        t.add_output(Output("FileSystem", Value=self.file_system))
 
     def create_template(self):
         self.create_filesystem()
